@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rafeeq — AI assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--vz-blue:#0070CD;--vz-blue-dark:#005AA8;--vz-blue-tint:#E3F0FB;--vz-blue-line:#BEDCF3;--vz-red:#EF0F0F;--vz-gold:#FFB624;--ink:#223140;--muted:#697884;--faint:#9AA6B0;--screen:#F6F8FB;--surface:#FFF;--line:#E4EAF0;--ok:#159466;--ok-bg:#EAF7F1;--ok-line:#BFE6D4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--ink);background:radial-gradient(1200px 600px at 20% -10%, #E9F2FB 0%, #EDF1F5 55%, #E7ECF1 100%);min-height:100vh;-webkit-font-smoothing:antialiased}
+.top{display:flex;align-items:center;gap:12px;padding:20px 34px}
+.top img{width:34px;height:34px;border-radius:8px;object-fit:contain}
+.top .wm{font-family:'Poppins';font-weight:700;font-size:20px;color:var(--vz-blue)}
+.top .tag{margin-left:12px;font-size:12px;font-weight:600;color:var(--vz-blue);background:#fff;border:1px solid var(--vz-blue-line);padding:4px 11px;border-radius:99px}
+.stage{display:flex;gap:40px;align-items:flex-start;justify-content:center;padding:8px 34px 50px;flex-wrap:wrap}
+.panel{width:300px;flex:0 0 300px;padding-top:10px}
+.panel h2{font-family:'Poppins';font-size:19px;font-weight:600;color:var(--vz-blue-dark);margin-bottom:8px}
+.panel p{font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.55}
+.panel .exlab{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);font-weight:700;margin-bottom:10px}
+.ex{font-size:13px;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 13px;margin-bottom:8px;cursor:pointer;transition:.13s}
+.ex:hover{border-color:var(--vz-blue-line);color:var(--vz-blue-dark);transform:translateX(2px)}
+.ex::before{content:"\201C";color:var(--faint)}.ex::after{content:"\201D";color:var(--faint)}
+.device{width:340px;height:710px;background:#0f1b28;border-radius:48px;padding:12px;box-shadow:0 3px 6px rgba(14,62,114,.14),0 30px 70px rgba(14,62,114,.22);flex:0 0 auto}
+.screen{width:100%;height:100%;background:var(--screen);border-radius:38px;overflow:hidden;position:relative;display:flex;flex-direction:column}
+.notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:130px;height:28px;background:#0f1b28;border-radius:0 0 17px 17px;z-index:20}
+.sbar{display:flex;justify-content:space-between;align-items:center;padding:14px 24px 6px;font-size:12px;font-weight:600}
+.sbar .ic{display:flex;gap:5px;align-items:center}.sbar svg{width:15px;height:11px}
+.chead{display:flex;align-items:center;gap:11px;padding:8px 18px 11px;border-bottom:1px solid var(--line)}
+.chead .av{width:40px;height:40px;flex:0 0 40px}
+.cname{font-family:'Poppins';font-weight:600;font-size:15px;color:var(--vz-blue-dark);display:flex;align-items:center;gap:6px;line-height:1.1}
+.cname .sp{color:var(--vz-gold);font-size:13px}
+.cstat{font-size:11px;color:var(--ok);display:flex;align-items:center;gap:5px;margin-top:2px}
+.cstat::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--ok)}
+.cbody{flex:1;overflow-y:auto;padding:16px 15px 12px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth}
+.cbody::-webkit-scrollbar{width:0}
+.bub{max-width:86%;padding:10px 13px;font-size:13px;line-height:1.5;border-radius:16px;animation:pop .22s ease}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.bub.ai{background:#fff;border:1px solid var(--line);border-bottom-left-radius:5px;align-self:flex-start}
+.bub.me{background:var(--vz-blue);color:#fff;border-bottom-right-radius:5px;align-self:flex-end}
+.bub b{font-weight:600}
+.bub.typing{display:flex;gap:5px;padding:13px 15px}
+.bub.typing span{width:7px;height:7px;border-radius:50%;background:#B9C2CC;animation:blink 1.2s infinite}
+.bub.typing span:nth-child(2){animation-delay:.2s}.bub.typing span:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,60%,100%{opacity:.3}30%{opacity:1}}
+.pcard{align-self:flex-start;max-width:90%;width:90%;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px;animation:pop .22s ease}
+.pcard .pt{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--faint);font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.pcard .pt svg{width:14px;height:14px;color:var(--vz-blue)}
+.pline{display:flex;justify-content:space-between;gap:12px;font-size:12.5px;padding:6px 0;border-top:1px solid var(--line)}
+.pline:first-of-type{border-top:none}.pline .l{color:var(--ink);font-weight:500}.pline .r{color:var(--muted);white-space:nowrap}
+.pfoot{display:flex;justify-content:space-between;margin-top:8px;padding-top:9px;border-top:1px solid var(--line);font-size:12.5px}.pfoot .l{color:var(--muted)}.pfoot b{color:var(--vz-blue-dark)}
+.rbig{font-family:'Poppins';font-size:28px;font-weight:600;color:var(--vz-blue-dark);display:flex;align-items:center;gap:10px}.rbig .u{font-size:13px;color:var(--faint);font-family:'Inter';font-weight:500}
+.rtag{font-size:10.5px;font-weight:600;color:var(--vz-blue);background:var(--vz-blue-tint);border:1px solid var(--vz-blue-line);padding:3px 9px;border-radius:99px}
+.rsub{font-size:12px;color:var(--muted);margin-top:7px}
+.quick{display:flex;flex-wrap:wrap;gap:7px;align-self:flex-start;animation:pop .22s ease;margin-top:-2px}
+.qc{font-size:12px;font-weight:600;padding:8px 13px;border-radius:99px;border:1px solid var(--vz-blue-line);background:var(--vz-blue-tint);color:var(--vz-blue);cursor:pointer;transition:.12s}
+.qc:hover{background:var(--vz-blue);color:#fff;border-color:var(--vz-blue)}
+.confirm{display:flex;align-items:flex-start;gap:9px;background:var(--ok-bg);border:1px solid var(--ok-line);border-radius:14px;padding:10px 12px;align-self:flex-start;max-width:90%;font-size:12.5px;font-weight:500;color:var(--ok);animation:pop .22s ease}
+.confirm svg{width:17px;height:17px;color:var(--ok);flex:0 0 17px;margin-top:1px}
+/* suggestions + input */
+.sugwrap{border-top:1px solid var(--line);background:#fff;padding:9px 12px 0}
+.suglab{font-size:9.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--faint);font-weight:700;margin:0 2px 6px;display:flex;align-items:center;gap:5px}
+.suglab svg{width:11px;height:11px;color:var(--vz-gold)}
+.sugrow{display:flex;gap:7px;overflow-x:auto;padding-bottom:9px;scrollbar-width:none}
+.sugrow::-webkit-scrollbar{display:none}
+.sug{white-space:nowrap;font-size:12px;font-weight:600;padding:7px 12px;border-radius:99px;border:1px solid var(--line);background:var(--screen);color:var(--ink);cursor:pointer;flex:0 0 auto;transition:.12s}
+.sug:hover{border-color:var(--vz-blue);color:var(--vz-blue)}
+.cinput{padding:10px 12px 14px;background:#fff;display:flex;gap:9px;align-items:center}
+.cinput input{flex:1;background:var(--screen);border:1px solid var(--line);border-radius:99px;padding:11px 16px;font-size:13px;font-family:inherit;color:var(--ink)}
+.cinput input:focus{outline:none;border-color:var(--vz-blue);box-shadow:0 0 0 3px var(--vz-blue-tint)}
+.csend{width:40px;height:40px;border-radius:50%;background:var(--vz-blue);display:flex;align-items:center;justify-content:center;flex:0 0 40px;cursor:pointer}
+.csend svg{width:18px;height:18px;color:#fff}
+@media(max-width:760px){.stage{flex-direction:column;align-items:center}.panel{width:340px;flex:none}}
+</style></head><body>
+<div class="top"><img src="data:image/png;base64,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" alt="Vezeeta"><span class="wm">Vezeeta</span><span class="tag">Rafeeq · AI assistant</span></div>
+<div class="stage">
+  <div class="panel">
+    <h2>Just ask Rafeeq</h2>
+    <p>Type what you need in your own words — Rafeeq understands and guides you. The chips are <b>shortcuts</b>, not a fixed path: tap one, or type anything, anytime.</p>
+    <div class="exlab">Try saying things like</div>
+    <div class="ex" data-say="I'm running low on my metformin">I'm running low on my metformin</div>
+    <div class="ex" data-say="Can I eat mango?">Can I eat mango?</div>
+    <div class="ex" data-say="I want to see a doctor">I want to see a doctor</div>
+    <div class="ex" data-say="How do my latest results look?">How do my latest results look?</div>
+    <div class="ex" data-say="My sugar reads 250">My sugar reads 250</div>
+  </div>
+  <div class="device"><div class="screen">
+    <div class="notch"></div>
+    <div class="sbar"><span>9:41</span><span class="ic"><svg viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="4" y="4" width="3" height="8" rx="1"/><rect x="8" y="2" width="3" height="10" rx="1"/><rect x="12" y="0" width="3" height="12" rx="1"/></svg><svg viewBox="0 0 20 12" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="2" width="15" height="8" rx="2"/><rect x="2.5" y="3.5" width="10" height="5" rx="1" fill="currentColor"/><rect x="17" y="4.5" width="1.6" height="3" rx="1" fill="currentColor"/></svg></span></div>
+    <div class="chead"><svg class="av" viewBox="0 0 48 48"><line x1="24" y1="6" x2="24" y2="12" stroke="#0070CD" stroke-width="2" stroke-linecap="round"/><circle cx="24" cy="5" r="2.4" fill="#FFB624"/><path d="M24 10C33 10 39 16 39 26 39 35 33 40 24 40 15 40 9 35 9 26 9 16 15 10 24 10Z" fill="#0070CD"/><circle cx="19" cy="25" r="3.4" fill="#fff"/><circle cx="29" cy="25" r="3.4" fill="#fff"/><circle cx="19.7" cy="25.6" r="1.5" fill="#083A66"/><circle cx="29.7" cy="25.6" r="1.5" fill="#083A66"/><path d="M18 31Q24 35 30 31" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M40 13l1.1 2.5 2.5 1.1-2.5 1.1L40 21l-1.1-2.2-2.5-1.1 2.5-1.1Z" fill="#FFB624"/></svg>
+      <div><div class="cname">Rafeeq <span class="sp">&#10022;</span></div><div class="cstat">Online · your care companion</div></div></div>
+    <div class="cbody" id="chat"></div>
+    <div class="sugwrap"><div class="suglab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/></svg>Shortcuts</div>
+      <div class="sugrow" id="sugrow"></div></div>
+    <div class="cinput"><input id="inp" type="text" placeholder="Ask Rafeeq anything…" autocomplete="off"><div class="csend" id="send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></div></div>
+  </div></div>
+</div>
+<script>
+const CART='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>';
+const chat=document.getElementById('chat'),inp=document.getElementById('inp');
+function scrollB(){chat.scrollTop=chat.scrollHeight;}
+function addUser(t){const d=document.createElement('div');d.className='bub me';d.textContent=t;chat.appendChild(d);scrollB();}
+function addAI(h){const d=document.createElement('div');d.className='bub ai';d.innerHTML=h;chat.appendChild(d);scrollB();}
+function addConfirm(t){const d=document.createElement('div');d.className='confirm';d.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg><span>'+t+'</span>';chat.appendChild(d);scrollB();}
+function addCard(c){const d=document.createElement('div');d.className='pcard';
+ if(c.type==='result'){d.innerHTML='<div class="pt">'+c.label+'</div><div class="rbig">'+c.value+'<span class="u">'+c.unit+'</span> <span class="rtag">'+c.tag+'</span></div><div class="rsub">'+c.sub+'</div>';}
+ else{let h='<div class="pt">'+(c.icon==='cart'?CART:'')+c.title+'</div>';c.rows.forEach(r=>h+='<div class="pline"><span class="l">'+r[0]+'</span><span class="r">'+(r[1]||'')+'</span></div>');if(c.foot)h+='<div class="pfoot"><span class="l">'+c.foot[0]+'</span><b>'+c.foot[1]+'</b></div>';d.innerHTML=h;}
+ chat.appendChild(d);scrollB();}
+function typing(on){let t=chat.querySelector('.bub.typing');if(on){if(!t){t=document.createElement('div');t.className='bub ai typing';t.innerHTML='<span></span><span></span><span></span>';chat.appendChild(t);scrollB();}}else if(t)t.remove();}
+function clearQuick(){const q=chat.querySelector('.quick');if(q)q.remove();}
+function setQuick(chips){clearQuick();if(!chips||!chips.length)return;const w=document.createElement('div');w.className='quick';
+ chips.forEach(c=>{const b=document.createElement('button');b.className='qc';b.textContent=c[0];b.onclick=()=>{clearQuick();addUser(c[0]);respond(c[1]);};w.appendChild(b);});chat.appendChild(w);scrollB();}
+
+/* cards */
+const CARDS={cart:{type:'list',title:'Your refill',icon:'cart',rows:[['Metformin 500mg','\u00d760 tabs'],['Vitamin D 1000 IU','\u00d730 tabs']],foot:['Covered by your plan','EGP 0 copay']},
+ result:{type:'result',label:'HbA1c \u00b7 8 Jul',value:'6.8',unit:'%',tag:'In target',sub:'Fasting glucose 102 mg/dL \u00b7 BP 118/76'},
+ meal:{type:'list',title:'Thursday \u00b7 lunch',rows:[['Grilled chicken & salad',''],['\u00bd mango \u2014 portioned','15g carb']]},
+ meals:{type:'list',title:'Today \u00b7 meals',rows:[['Breakfast','Foul & egg'],['Lunch','Chicken & salad'],['Dinner','Lentil soup']]}};
+
+/* responses — each turn resolves; user is never locked in */
+const R={
+ greet:{m:"Hi Layla \u2014 I'm Rafeeq. Tell me what you need in your own words, or tap a shortcut. I'll guide you.",q:[["Refill my meds","refill"],["Book a visit","book"],["My results","results"],["My plan","plan"]]},
+ refill:{m:"Sure \u2014 here's your refill, ready to go:",card:'cart',q:[["Deliver to home","refill_deliver"],["Lounge pickup","refill_pickup"],["Not now","cancel"]]},
+ refill_deliver:{c:"Ordered \u2014 arriving tomorrow morning. I'll remind you when it's out for delivery."},
+ refill_pickup:{c:"Ready at the lounge from tomorrow. I'll notify you."},
+ book:{m:"Happy to book. Your endocrinologist is <b>Dr. Amira Sami</b> \u2014 here are her next openings:",q:[["Today 4:00pm \u00b7 video","book_done"],["Tomorrow 10:30 \u00b7 lounge","book_done"],["A different specialty","book_spec"]]},
+ book_spec:{m:"Which specialty? These are common alongside diabetes care:",q:[["Nutrition","book_done"],["Ophthalmology","book_done"],["Podiatry","book_done"]]},
+ book_done:{c:"Booked \u2014 added to your calendar with a reminder 15 min before."},
+ reschedule:{m:"Your next lab (HbA1c) is <b>Thu 11 Jul, 9:40am</b>. When would you prefer?",q:[["Sun 14 \u00b7 10:30","resched_done"],["Mon 15 \u00b7 11:00","resched_done"],["Keep it","cancel"]]},
+ resched_done:{c:"Rebooked \u2014 old slot released and your reminder is updated."},
+ results:{m:"Here's your most recent panel. These sit within the range Dr. Amira set \u2014 I can share them with her, but I won't interpret changes myself.",card:'result',q:[["Share with Dr. Amira","results_share"],["Book a review","book"],["Thanks","cancel"]]},
+ results_share:{c:"Shared with Dr. Amira \u2014 she'll see it before your next visit."},
+ food:{m:"I can't give medical advice on foods \u2014 but I can check your plan. Here's where it fits:",card:'meal',q:[["See full plan","plan"],["Ask my care team","careteam"]]},
+ plan:{m:"Your status is <b>Maintenance</b>, approved by Dr. Amira. Today: 3 balanced meals, a 20-min walk, and your evening Metformin.",q:[["Today's meals","meals"],["Exercise video","exercise"],["Reminders","reminders"]]},
+ meals:{m:"Here's today's menu:",card:'meals',q:[["Looks good","cancel"]]},
+ exercise:{m:"Today's guided walk is ready \u2014 8 minutes, follow along whenever suits you.",q:[["Start now","cancel"]]},
+ reminders:{m:"You have reminders for Metformin at 8:00 & 20:00, and your lab on Thursday. Want to add one?",q:[["Add a reminder","cancel"],["All set","cancel"]]},
+ billing:{m:"Your plan covers consultations, medications and lab tests \u2014 nothing due right now.",q:[["View invoices","cancel"],["Thanks","cancel"]]},
+ careteam:{m:"I'll connect you with your care team \u2014 they'll reach out shortly. If it feels urgent, tap below.",q:[["It's urgent","emergency"],["Okay, thanks","cancel"]]},
+ emergency:{m:"That could be serious, and I'm not able to give medical advice. I've alerted your care team and they're calling you now \u2014 if you feel worse, please call emergency services.",q:[["Call the clinic","cancel"]]},
+ cancel:{m:"Anytime, Layla. What else can I help with?",q:[]},
+ unknown:{m:"I can help with refills, appointments, lab results, your plan, reminders, and reaching your care team \u2014 what would you like?",q:[["Refill my meds","refill"],["Book a visit","book"],["My results","results"],["Reach my care team","careteam"]]}
+};
+function respond(key){const r=R[key]||R.unknown;typing(true);
+ setTimeout(()=>{typing(false);if(r.c){addConfirm(r.c);}else{addAI(r.m);if(r.card)addCard(CARDS[r.card]);}setQuick(r.q||[]);},700);}
+
+/* intent understanding (keyword match stands in for the real model) */
+function classify(t){t=' '+t.toLowerCase()+' ';
+ if(/emergenc|urgent|help now|\b2[0-9]{2}\b|sugar.*(high|low|250|300)|hypo|hyper|faint|dizzy|chest pain|can'?t breathe|passing out|collaps/.test(t))return'emergency';
+ if(/can i (eat|have|drink)|is .*(ok|okay|safe) to eat|\beat\b|\bfood\b|mango|banana|rice|bread|dates|dessert|sugar in/.test(t))return'food';
+ if(/reschedul|resched|postpone|move (my )?(lab|appt|appointment|visit)|change (my )?(lab|appt|appointment|visit|time)/.test(t))return'reschedule';
+ if(/book|appointment|see (a )?doctor|talk to (a )?doctor|consult|visit|schedule (a )?(visit|call)/.test(t))return'book';
+ if(/refill|renew|run(ning)? (low|out)|reorder|prescription|metformin|medicine|medication|pharmac/.test(t))return'refill';
+ if(/result|hba1c|a1c|\blab\b|test result|my (numbers|reading)|how am i doing/.test(t))return'results';
+ if(/remind|alarm|notify|notification/.test(t))return'reminders';
+ if(/bill|invoice|cover|insurance|cost|price|\bpay\b/.test(t))return'billing';
+ if(/exercise|workout|walk|move/.test(t))return'exercise';
+ if(/meal|menu|eat today/.test(t))return'meals';
+ if(/my plan|care plan|status|what should i do today/.test(t))return'plan';
+ if(/care team|nurse|educator|speak to someone|talk to someone/.test(t))return'careteam';
+ if(/^\s*(hi|hey|hello|salam|good (morning|evening|afternoon)|thanks|thank you|shukran)\b/.test(t))return'greet';
+ return'unknown';}
+
+function send(text){text=(text||'').trim();if(!text)return;clearQuick();addUser(text);respond(classify(text));inp.value='';}
+document.getElementById('send').onclick=()=>send(inp.value);
+inp.addEventListener('keydown',e=>{if(e.key==='Enter')send(inp.value);});
+document.querySelectorAll('.ex').forEach(e=>e.onclick=()=>send(e.dataset.say));
+
+/* persistent shortcut bar */
+const SUG=[["Refill","refill"],["Book a visit","book"],["My results","results"],["My plan","plan"],["Reminders","reminders"],["Reschedule a lab","reschedule"]];
+const sr=document.getElementById('sugrow');
+SUG.forEach(s=>{const b=document.createElement('button');b.className='sug';b.textContent=s[0];b.onclick=()=>{clearQuick();addUser(s[0]);respond(s[1]);};sr.appendChild(b);});
+
+/* open with a greeting */
+addAI(R.greet.m);setQuick(R.greet.q);
+</script></body></html>
